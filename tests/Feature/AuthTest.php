@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class AuthTest extends TestCase
@@ -76,32 +77,26 @@ class AuthTest extends TestCase
     public function test_user_can_logout(): void
     {
         $user = User::factory()->create();
+        Sanctum::actingAs($user);
 
-        $token = $user->createToken($user->email);
-
-        $response = $this->postJson('/api/logout', [], [
-            'Authorization' => 'Bearer '.$token->plainTextToken,
-        ]);
+        $response = $this->postJson('/api/logout');
 
         $response->assertNoContent();
 
         $this->assertDatabaseMissing('personal_access_tokens', [
             'tokenable_id' => $user->id,
-            'tokenable_type' => User::class,
         ]);
     }
 
     public function test_user_can_logout_from_all_devices(): void
     {
         $user = User::factory()->create();
-
-        $token1 = $user->createToken('Device 1');
-
+        $user->createToken('Device 1');
         $user->createToken('Device 2');
 
-        $response = $this->postJson('/api/logout-all-devices', [], [
-            'Authorization' => 'Bearer '.$token1->plainTextToken,
-        ]);
+        Sanctum::actingAs($user);
+
+        $response = $this->postJson('/api/logout-all-devices');
 
         $response->assertNoContent();
 
