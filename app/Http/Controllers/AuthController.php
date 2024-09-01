@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendWelcomeEmail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -36,6 +37,8 @@ class AuthController extends Controller
             'user' => $user,
             'token' => $token->plainTextToken,
         ];
+
+        SendWelcomeEmail::dispatch($user);
 
         return response($response, 201);
     }
