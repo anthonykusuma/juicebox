@@ -60,3 +60,9 @@ The application sends an email to the user when a successful registration is mad
 ```bash
 php artisan email:send-welcome {userId}
 ```
+
+## Testing
+You can run the tests using the following command
+```bash
+php artisan test
+```
