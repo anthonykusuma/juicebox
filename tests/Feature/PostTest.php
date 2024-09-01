@@ -64,20 +64,14 @@ class PostTest extends TestCase
             'content' => $this->faker->paragraph,
         ]);
 
-        $response->assertStatus(201)
-            ->assertJsonStructure([
-                'id',
-                'title',
-                'content',
-                'slug',
-                'created_at',
-                'updated_at',
-            ]);
+        $response->assertStatus(201);
+
+        $responseData = $response->json('data');
 
         $this->assertDatabaseHas('posts', [
-            'title' => $response['title'],
-            'content' => $response['content'],
-            'slug' => $response['slug'],
+            'title' => $responseData['title'],
+            'content' => $responseData['content'],
+            'slug' => $responseData['slug'],
         ]);
     }
 
@@ -89,19 +83,13 @@ class PostTest extends TestCase
         $response = $this->getJson("/api/posts/{$post->id}");
 
         $response->assertStatus(200)
-            ->assertJsonStructure([
-                'id',
-                'title',
-                'content',
-                'slug',
-                'created_at',
-                'updated_at',
-            ])
             ->assertJson([
-                'id' => $post->id,
-                'title' => $post->title,
-                'content' => $post->content,
-                'slug' => $post->slug,
+                'data' => [
+                    'id' => $post->id,
+                    'title' => $post->title,
+                    'content' => $post->content,
+                    'slug' => $post->slug,
+                ],
             ]);
     }
 

@@ -34,7 +34,9 @@ class PostController extends Controller
     }
 
     /**
-     * Store a new post.
+     * Create a post
+     *
+     * Create a new post.
      */
     public function store(Request $request)
     {
@@ -52,11 +54,18 @@ class PostController extends Controller
                 'content' => $fields['content'],
             ]);
 
-        return response($post, 201);
+        /**
+         * The created post.
+         *
+         * @status 201
+         */
+        return PostResource::make($post);
     }
 
     /**
-     * Display the specified post.
+     * Retrieve a post
+     *
+     * Retrieve a post by ID.
      *
      * @param  int  $id  The post ID
      *
@@ -67,16 +76,18 @@ class PostController extends Controller
         try {
             $post = Post::findOrFail($id);
 
-            return response(PostResource::make($post), 200);
+            return PostResource::make($post);
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'Post not found'], 404);
         }
     }
 
     /**
+     * Update a post
+     *
      * Update the specified post.
      *
-     * @param  int  $id  the postID
+     * @param  int  $id  The post ID
      */
     public function update(Request $request, $id)
     {
@@ -96,7 +107,7 @@ class PostController extends Controller
                 'content' => $fields['content'],
             ]);
 
-            return response($post, 200);
+            return PostResource::make($post);
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'Post not found'], 404);
         } catch (AuthorizationException $e) {
@@ -105,9 +116,11 @@ class PostController extends Controller
     }
 
     /**
-     * Remove the specified post.
+     * Delete a post
      *
-     * @param  int  $id  the postID
+     * Delete the specified post.
+     *
+     * @param  int  $id  The post ID
      */
     public function destroy($id)
     {
@@ -118,7 +131,7 @@ class PostController extends Controller
 
             $post->delete();
 
-            return response()->json(['message' => 'Post deleted'], 200);
+            return response()->noContent();
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'Post not found'], 404);
         } catch (AuthorizationException $e) {
