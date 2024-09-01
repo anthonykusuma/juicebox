@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('Pswd1234!'),
         ]);
 
-        Post::factory(18)->create();
+        Post::factory(18)->create(
+            ['user_id' => User::first()->id]
+        );
     }
 }
