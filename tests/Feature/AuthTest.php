@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Mail\Mailable;
+use Illuminate\Support\Facades\Mail;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
@@ -13,12 +15,16 @@ class AuthTest extends TestCase
 
     public function test_user_can_register_with_valid_fields(): void
     {
-        $response = $this->postJson('/api/register', [
+        Mail::fake();
+
+        $fields = [
             'name' => 'Juicebox',
             'email' => 'test@juicebox.com.au',
             'password' => 'Abc12345!',
             'password_confirmation' => 'Abc12345!',
-        ]);
+        ];
+
+        $response = $this->postJson('/api/register', $fields);
 
         $response->assertStatus(201)
             ->assertJsonStructure([
@@ -33,15 +39,19 @@ class AuthTest extends TestCase
             ])
             ->assertJson([
                 'user' => [
-                    'name' => 'Juicebox',
-                    'email' => 'test@juicebox.com.au',
+                    'name' => $fields['name'],
+                    'email' => $fields['email'],
                 ],
             ]);
 
         $this->assertDatabaseHas('users', [
-            'name' => 'Juicebox',
-            'email' => 'test@juicebox.com.au',
+            'name' => $fields['name'],
+            'email' => $fields['email'],
         ]);
+
+        Mail::assertSent(function (Mailable $mail) use ($fields) {
+            return $mail->hasTo($fields['email']);
+        });
     }
 
     public function test_user_can_login_with_valid_credentials(): void
