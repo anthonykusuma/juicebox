@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 
 class PostController extends Controller
@@ -64,6 +66,8 @@ class PostController extends Controller
         try {
             $post = Post::findOrFail($id);
 
+            Gate::authorize('modify', $post);
+
             $fields = $request->validate([
                 'title' => 'required|max:255',
                 'content' => 'required',
@@ -78,6 +82,8 @@ class PostController extends Controller
             return response($post, 200);
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'Post not found'], 404);
+        } catch (AuthorizationException $e) {
+            return response()->json(['error' => 'You do not have permission to modify this post.'], 403);
         }
     }
 
@@ -91,11 +97,15 @@ class PostController extends Controller
         try {
             $post = Post::findOrFail($id);
 
+            Gate::authorize('modify', $post);
+
             $post->delete();
 
             return response()->json(['message' => 'Post deleted'], 200);
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'Post not found'], 404);
+        } catch (AuthorizationException $e) {
+            return response()->json(['error' => 'You do not have permission to delete this post.'], 403);
         }
     }
 
