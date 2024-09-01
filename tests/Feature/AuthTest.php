@@ -74,6 +74,23 @@ class AuthTest extends TestCase
             ]);
     }
 
+    public function test_user_can_not_login_with_invalid_credentials(): void
+    {
+        $user = User::factory()->create([
+            'password' => bcrypt('Abc12345!'),
+        ]);
+
+        $response = $this->postJson('/api/login', [
+            'email' => $user->email,
+            'password' => 'WrongPassword!',
+        ]);
+
+        $response->assertStatus(401)
+            ->assertJson([
+                'message' => 'Invalid credentials.',
+            ]);
+    }
+
     public function test_user_can_logout(): void
     {
         $user = User::factory()->create();
