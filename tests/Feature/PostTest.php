@@ -98,28 +98,29 @@ class PostTest extends TestCase
         $user = User::factory()->create();
         $post = Post::factory()->create(['user_id' => $user->id]);
 
+        $updatedTitle = $this->faker->sentence;
+        $updatedContent = $this->faker->paragraph;
+
         Sanctum::actingAs($user);
 
         $response = $this->putJson("/api/posts/{$post->id}", [
-            'title' => $this->faker->sentence,
-            'content' => $this->faker->paragraph,
+            'title' => $updatedTitle,
+            'content' => $updatedContent,
         ]);
 
         $response->assertStatus(200)
-            ->assertJsonStructure([
-                'id',
-                'title',
-                'content',
-                'slug',
-                'created_at',
-                'updated_at',
+            ->assertJson([
+                'data' => [
+                    'id' => $post->id,
+                    'title' => $updatedTitle,
+                    'content' => $updatedContent,
+                ],
             ]);
 
         $this->assertDatabaseHas('posts', [
             'id' => $post->id,
-            'title' => $response['title'],
-            'content' => $response['content'],
-            'slug' => $response['slug'],
+            'title' => $updatedTitle,
+            'content' => $updatedContent,
         ]);
     }
 
@@ -132,7 +133,7 @@ class PostTest extends TestCase
 
         $response = $this->deleteJson("/api/posts/{$post->id}");
 
-        $response->assertStatus(200);
+        $response->assertStatus(204);
 
         $this->assertDatabaseMissing('posts', [
             'id' => $post->id,
