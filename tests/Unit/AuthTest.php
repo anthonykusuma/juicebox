@@ -2,11 +2,14 @@
 
 namespace Tests\Unit;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class AuthTest extends TestCase
 {
+    use RefreshDatabase;
+
     #[DataProvider('invalidRegistrationDataProvider')]
     public function test_user_cannot_register_with_invalid_fields($input, $expectedErrors): void
     {
