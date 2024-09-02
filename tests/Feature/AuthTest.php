@@ -28,19 +28,23 @@ class AuthTest extends TestCase
 
         $response->assertStatus(201)
             ->assertJsonStructure([
-                'user' => [
-                    'id',
-                    'name',
-                    'email',
-                    'created_at',
-                    'updated_at',
+                'data' => [
+                    'user' => [
+                        'id',
+                        'name',
+                        'email',
+                        'created_at',
+                        'updated_at',
+                    ],
+                    'token',
                 ],
-                'token',
             ])
             ->assertJson([
-                'user' => [
-                    'name' => $fields['name'],
-                    'email' => $fields['email'],
+                'data' => [
+                    'user' => [
+                        'name' => $fields['name'],
+                        'email' => $fields['email'],
+                    ],
                 ],
             ]);
 
@@ -67,19 +71,23 @@ class AuthTest extends TestCase
 
         $response->assertStatus(201)
             ->assertJsonStructure([
-                'user' => [
-                    'id',
-                    'name',
-                    'email',
-                    'created_at',
-                    'updated_at',
+                'data' => [
+                    'user' => [
+                        'id',
+                        'name',
+                        'email',
+                        'created_at',
+                        'updated_at',
+                    ],
+                    'token',
                 ],
-                'token',
             ])
             ->assertJson([
-                'user' => [
-                    'name' => $user->name,
-                    'email' => $user->email,
+                'data' => [
+                    'user' => [
+                        'name' => $user->name,
+                        'email' => $user->email,
+                    ],
                 ],
             ]);
     }
