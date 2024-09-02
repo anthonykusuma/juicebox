@@ -45,8 +45,7 @@ class PostController extends Controller
             'content' => 'required',
         ]);
 
-        $post = $request
-            ->user()
+        $post = $request->user()
             ->posts()
             ->create([
                 'title' => $fields['title'],

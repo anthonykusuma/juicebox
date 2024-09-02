@@ -16,26 +16,32 @@ class PostResource extends JsonResource
     {
         return [
             'id' => $this->id,
+
             /**
              * The user who made the post.
              */
             'user_id' => $this->user_id,
+
             /**
              * The title of the post.
              */
             'title' => $this->title,
+
             /**
              * The slug of the post that is generated automatically.
              */
             'slug' => $this->slug,
+
             /**
              * The content of the post.
              */
             'content' => $this->content,
+
             /**
              * The date and time the post was created.
              */
             'created_at' => $this->created_at,
+
             /**
              * The date and time the post was last updated.
              */

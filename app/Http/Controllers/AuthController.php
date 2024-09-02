@@ -15,6 +15,7 @@ class AuthController extends Controller
      * Create a user
      *
      * Register a new user and send a welcome email once created.
+     *
      * @unauthenticated
      */
     public function register(Request $request)
@@ -54,8 +55,9 @@ class AuthController extends Controller
 
     /**
      * Login a user
-     * 
+     *
      * Logs user into the system
+     *
      * @unauthenticated
      */
     public function login(Request $request)
@@ -90,7 +92,7 @@ class AuthController extends Controller
 
     /**
      * Logout a user
-     * 
+     *
      * Revokes the current user's token
      */
     public function logout(Request $request)
@@ -102,7 +104,7 @@ class AuthController extends Controller
 
     /**
      * Logout all devices
-     * 
+     *
      * Revokes all of the current user's tokens
      */
     public function logoutAllDevices(Request $request)
