@@ -58,7 +58,7 @@ The API documentation is generated using [Scramble](https://scramble.dedoc.co/) 
 ## Welcome Email
 The application sends an email to the user when a successful registration is made. This job is queued and processed by the worker. You can dispatch this job manually by running the following command after registering a new user.
 ```bash
-php artisan email:send-welcome {userId}
+php artisan mail:send-welcome {userId}
 ```
 
 ## Testing
